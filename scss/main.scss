@@ -1,0 +1,29 @@
+.result-container {
+    display: flex;
+
+}
+
+.search-container {
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(175, 175, 175, 0.5);
+
+    display: flex;
+    flex-direction: row;
+
+    img {
+        height: 35px;
+        margin-right: 10px;
+    }
+
+    #searchBox {
+        flex-grow: 1;
+        border: none;
+        font-size: 20px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}

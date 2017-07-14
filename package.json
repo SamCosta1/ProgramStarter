@@ -1,0 +1,26 @@
+{
+  "name": "program-finder",
+  "version": "1.0.0",
+  "description": "Alternative to D-menu for i3",
+  "main": "main.js",
+  "scripts": {
+    "sass": "rm css/*; cat scss/* > temp.scss; scss temp.scss css/styles.css; rm temp.scss",
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "repository": "",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "Sam Costa",
+  "devDependencies": {
+    "electron": "~1.6.2",
+    "electron-builder": "^19.16.0",
+    "jquery": "^3.2.1"
+  }
+}

@@ -1,0 +1,8 @@
+PATHS=$(echo $PATH | tr ":" "\n")
+
+{
+    for p in $PATHS
+    do
+        ls $p 
+    done
+} > executables.txt
