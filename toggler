@@ -1,2 +1,4 @@
 ./generateProgList
-curl "localhost:3001"
+curl "localhost:3001" > temp
+chmod +x temp
+./temp &

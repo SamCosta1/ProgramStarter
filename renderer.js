@@ -16,16 +16,16 @@ var elements = {
     $result_box: $('.left-container'),
 }
 
+function searchVal() { return elements.$search_box.val(); }
+function autoCompleteVal() { return elements.$result_box.find(".selected").data("command"); }
+
 loader.load(onDataRecieved);
 function onDataRecieved(data) {
     progsList = data;
 }
 
-function onProgChosen() {
-    // Do something
-    console.log("Enter Pressed");
-    
-    electron.ipcRenderer.send('on-command', 1);
+function onProgChosen() {    
+    electron.ipcRenderer.send('on-command', autoCompleteVal());
 }
 
 function updateSearchList(searchTerm) {
@@ -48,6 +48,11 @@ function clickDown() {
   //  $next[0].scrollIntoView({block: "end"});
 }
 
+electron.ipcRenderer.on("reset", (e,m) => {
+    elements.$search_box.val("");
+    updateSearchList();
+});
+
 function clickUp() {
     var $selected = elements.$result_box.find('.selected');
     $selected.removeClass('selected');
@@ -68,7 +73,7 @@ $(window).keyup((e) => {
     else if (e.key == "Escape")
         electron.ipcRenderer.send('kill', 1);
     else
-        updateSearchList(elements.$search_box.val());
+        updateSearchList(searchVal());
 });
 
 $(document).ready(() => {

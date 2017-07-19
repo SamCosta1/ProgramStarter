@@ -56,29 +56,41 @@ function createWindow () {
       
       showing = !showing;
 
-      res.writeHead(200, {'Content-Type': 'text/plain'});     
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+
+      mainWindow.webContents.send("reset");     
+
+      if (result != null)
+        result.end("");
       result = res;
     
   }).listen(3001);
+
+  kill();
 }
 
-electron.ipcMain.on('on-command', (e,a) => {
-    if (result != null)
-      result.end("blablabla");
+electron.ipcMain.on('on-command', (e,arg) => {
+    if (result != null) {
+      result.end(arg);   
+      result = null;
+    } 
 
+    console.log("Run Command: " + arg);
     kill();
 });
 
 electron.ipcMain.on('kill', (e,a) => {
   kill();
 
-  if (result != null)
+  if (result != null) {
     result.end("");
+    result = null;
+  }
 });
 
 function kill() {
   showing = false;
-   mainWindow.hide();
+  mainWindow.hide();
 }
 
 
