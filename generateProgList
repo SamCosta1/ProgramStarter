@@ -1,5 +1,4 @@
 PATHS=$(echo $PATH | tr ":" "\n")
-
 {
     for p in $PATHS
     do

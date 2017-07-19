@@ -2919,6 +2919,7 @@ systemd-tty-ask-password-agent
 tailf
 tar
 tempfile
+toggler
 touch
 true
 udevadm

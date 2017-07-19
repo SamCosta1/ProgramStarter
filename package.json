@@ -22,5 +22,7 @@
     "electron": "~1.6.2",
     "electron-builder": "^19.16.0",
     "jquery": "^3.2.1"
+  },
+  "dependencies": {
   }
 }

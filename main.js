@@ -4,8 +4,10 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
+
 const path = require('path')
 const url = require('url')
+const http = require('http')
 
 const width = 500;
 const height = 300;
@@ -13,13 +15,20 @@ const height = 300;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+var showing = true;
+var result = null;
 
 function createWindow () {
 
   var xOffset = electron.screen.getPrimaryDisplay().size.width / 4;
   var yOffset = electron.screen.getPrimaryDisplay().size.height / 2 - height / 2;
   // Create the browser window.
-  mainWindow = new BrowserWindow({width, height, frame: false, title: "progFinder", center:  true, x: xOffset, y: yOffset})
+
+  var config = {
+    width, height, frame: false, title: "progFinder", center:  true, x: xOffset, y: yOffset, show: showing
+  }
+  mainWindow = new BrowserWindow(config);
+  mainWindow.height = height;
   
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -29,7 +38,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-   mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -38,7 +47,40 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+  
+  http.createServer(function (req, res) {
+      if (showing)     
+        mainWindow.hide();
+      else
+        mainWindow.show();
+      
+      showing = !showing;
+
+      res.writeHead(200, {'Content-Type': 'text/plain'});     
+      result = res;
+    
+  }).listen(3001);
 }
+
+electron.ipcMain.on('on-command', (e,a) => {
+    if (result != null)
+      result.end("blablabla");
+
+    kill();
+});
+
+electron.ipcMain.on('kill', (e,a) => {
+  kill();
+
+  if (result != null)
+    result.end("");
+});
+
+function kill() {
+  showing = false;
+   mainWindow.hide();
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

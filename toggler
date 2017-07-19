@@ -1,0 +1,2 @@
+./generateProgList
+curl "localhost:3001"
