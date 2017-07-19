@@ -4,6 +4,8 @@
 const $ = require("jquery");
 const loader = require("./loader"); loader.load((data) => {  progsList = data; });
 
+const progsConfig = require("./progsConfig").progs();
+
 const filterer = require("./filterer");
 const http = require('http')
 const guiMaker = require('./guiMaker')
@@ -15,17 +17,18 @@ var elements = {
     $body: $('body'),
     $search_box: $('#searchBox'),
     $result_box: $('.left-container'),
-}
+};
 
 $(document).ready(() => {
     var height = electron.remote.getCurrentWindow().height;
-    elements.$result_box.height(height - elements.$search_box.outerHeight()  - 20);
+    elements.$result_box.height(height - elements.$search_box.outerHeight() - 20);
 });
 
 function searchVal() {       return elements.$search_box.val();                             }
 function autoCompleteVal() { return elements.$result_box.find(".selected").data("command"); }
 function onProgChosen() {    electron.ipcRenderer.send('on-command', autoCompleteVal());    }
 
+electron.ipcRenderer.on("reset", (e,m) => {   elements.$search_box.val("");   updateSearchList();    });
 
 function updateSearchList(searchTerm) {
     var filteredList = filterer.filter(searchTerm, progsList);
@@ -45,10 +48,6 @@ function clickDown() {
     $next.addClass('selected');
 }
 
-electron.ipcRenderer.on("reset", (e,m) => {
-    elements.$search_box.val("");
-    updateSearchList();
-});
 
 function clickUp() {
     var $selected = elements.$result_box.find('.selected');
