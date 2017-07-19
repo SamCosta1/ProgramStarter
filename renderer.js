@@ -2,7 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const $ = require("jquery");
-const loader = require("./loader");
+const loader = require("./loader"); loader.load((data) => {  progsList = data; });
+
 const filterer = require("./filterer");
 const http = require('http')
 const guiMaker = require('./guiMaker')
@@ -16,17 +17,15 @@ var elements = {
     $result_box: $('.left-container'),
 }
 
-function searchVal() { return elements.$search_box.val(); }
+$(document).ready(() => {
+    var height = electron.remote.getCurrentWindow().height;
+    elements.$result_box.height(height - elements.$search_box.outerHeight()  - 20);
+});
+
+function searchVal() {       return elements.$search_box.val();                             }
 function autoCompleteVal() { return elements.$result_box.find(".selected").data("command"); }
+function onProgChosen() {    electron.ipcRenderer.send('on-command', autoCompleteVal());    }
 
-loader.load(onDataRecieved);
-function onDataRecieved(data) {
-    progsList = data;
-}
-
-function onProgChosen() {    
-    electron.ipcRenderer.send('on-command', autoCompleteVal());
-}
 
 function updateSearchList(searchTerm) {
     var filteredList = filterer.filter(searchTerm, progsList);
@@ -44,8 +43,6 @@ function clickDown() {
     
     var $next = $selected.next();
     $next.addClass('selected');
-
-  //  $next[0].scrollIntoView({block: "end"});
 }
 
 electron.ipcRenderer.on("reset", (e,m) => {
@@ -59,8 +56,6 @@ function clickUp() {
     
     var $previous = $selected.prev();
     $previous.addClass('selected');
-
-  //  $previous[0].scrollIntoView({block: "end"});
 }
 
 $(window).keyup((e) => {
@@ -74,12 +69,4 @@ $(window).keyup((e) => {
         electron.ipcRenderer.send('kill', 1);
     else
         updateSearchList(searchVal());
-});
-
-$(document).ready(() => {
-
-    var height = electron.remote.getCurrentWindow().height;
-    elements.$result_box.height(height - elements.$search_box.outerHeight()  - 20);
-
-
 });
