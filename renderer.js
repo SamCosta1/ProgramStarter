@@ -17,6 +17,11 @@ var elements = {
     $body: $('body'),
     $search_box: $('#searchBox'),
     $result_box: $('.left-container'),
+    $logos: $('.logo'),
+
+    $name: $('.name'),
+    $version: $('.version'),
+    $author: $('.author')
 };
 
 $(document).ready(() => {
@@ -28,16 +33,57 @@ function searchVal() {       return elements.$search_box.val();                 
 function autoCompleteVal() { return elements.$result_box.find(".selected").data("command"); }
 function onProgChosen() {    electron.ipcRenderer.send('on-command', autoCompleteVal());    }
 
-electron.ipcRenderer.on("reset", (e,m) => {   elements.$search_box.val("");   updateSearchList();    });
+electron.ipcRenderer.on("reset", reset);
+
+function reset() {
+    elements.$search_box.val("");   
+    updateSearchList();
+    refresh();
+}
 
 function updateSearchList(searchTerm) {
+    elements.$result_box.empty();
+
+    if (!searchTerm || searchTerm.trim().length == 0)
+        return;
+
     var filteredList = filterer.filter(searchTerm, progsList);
 
-    elements.$result_box.empty();
 
     for (i in filteredList)
         elements.$result_box.append(guiMaker.newResultField(filteredList[i]));
     elements.$result_box.children().first().addClass('selected');
+}
+
+function refresh() {
+    var selectedCommand = autoCompleteVal();
+    setImages(selectedCommand);
+    
+    if (progsConfig[selectedCommand])
+        setDetails(progsConfig[selectedCommand]);
+    else
+        setDetails({});
+}
+
+function setDetails(info) {
+    elements.$name.html("");
+    elements.$author.html("");
+    elements.$version.html("");
+
+    elements.$name.html(info.name);
+    elements.$version.html(info.version);
+    elements.$author.html(info.author);
+}
+
+function setImages(command) {
+    if (progsConfig.images.indexOf(command + ".png") >= 0) {
+        elements.$logos.show();
+        elements.$logos.attr("src", "pics/" + command + ".png");
+    }
+    else {
+        elements.$logos.hide();
+        elements.$logos.attr("src", "");
+    }
 }
 
 function clickDown() {
@@ -68,4 +114,5 @@ $(window).keyup((e) => {
         electron.ipcRenderer.send('kill', 1);
     else
         updateSearchList(searchVal());
+    refresh();
 });

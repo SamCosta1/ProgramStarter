@@ -12,7 +12,14 @@ exports.progs = () => {
         handleSuperType(command,  baseInfo[command]);
     
     console.log(baseInfo);
+    addImageData();
     return baseInfo;
+}
+
+function addImageData() {
+    child_process.exec("ls pics" , (error, stdout, stderr) => {
+        baseInfo.images = stdout.split('\n');
+    });
 }
 
 function handleSuperType(command, prog) {
@@ -39,7 +46,7 @@ function setVersion(command, prog) {
 
 }
 
-var programTypes = {
+var types = {
     web_browser: {
         default: "google-chrome",
         file_types: [".html"],
@@ -58,6 +65,11 @@ var programTypes = {
         string: "Integrated Development Enviroment"
     },
 
+    photo_editor: {
+        default: "gimp",
+        string: "Image manipulation software"
+    },
+
     other: {
         string: "Some Cool App"
     }
@@ -68,7 +80,7 @@ var baseInfo  = {
     "google-chrome": {
         name: "Google Chrome",
         author: "Google Inc",
-        type: "Web Browser",
+        type: types.web_browser,
         version_command: ' -version | cut -f3 -d " "'
     },
 
@@ -79,22 +91,61 @@ var baseInfo  = {
 
     "firefox" : {
         name: "Firefox",
-        author: "Mozzilla Foundation",
-        type: "Web Browser",        
+        author: "Mozilla Foundation",
+        type: types.web_browser,        
         version_command: " -version"
     },
 
     "gedit" : {
         name: "Gedit",
         author: "",
-        type: "Text Editor",
+        type: types.text_editor,
         version_command: ' --version | cut -f4 -d " " '
     },
 
     "code" : { 
         name: "Visual Studio Code",
         author: "Microsoft Corporation",
+        type: types.ide,
         version_command: " -version | sed -n 1p"
+    },
+
+    "eclipse": {
+        name: "Eclipse neon",
+        author: "",
+        type: types.ide
+    },
+
+    "intellij": {
+        name: "IntelliJ IDEA",
+        author: "Jet Brains",
+        type: types.ide
+    },
+
+    "android-studio": {
+        name: "Android Studio",
+        author: "Google Inc",
+        type: types.ide
+    },
+
+    "atom": {
+        name: "Atom",
+        author: "Github",
+        type: types.ide,
+        version_command: ' -v | sed -n 1p | cut -f6 -d " "'
+    },
+
+    "gitkraken": {
+        name: "GitKraken",
+        author: "Axosoft",
+        type: types.other,
+        version_command: "  --version | sed -n 2p "
+    },
+
+    "gimp": {
+        name: "Gimp",
+        type: types.photo_editor,
+        version_command: ' --version | cut -f6 -d " "'
     }
 }
 

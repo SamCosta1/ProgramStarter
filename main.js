@@ -4,13 +4,12 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-
 const path = require('path')
 const url = require('url')
 const http = require('http')
 
-const width = 500;
-const height = 300;
+const width = 600;
+const height = 325;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,7 +19,7 @@ var result = null;
 
 function createWindow () {
 
-  var xOffset = electron.screen.getPrimaryDisplay().size.width / 4;
+  var xOffset = electron.screen.getPrimaryDisplay().size.width / 5;
   var yOffset = electron.screen.getPrimaryDisplay().size.height / 2 - height / 2;
   // Create the browser window.
 
