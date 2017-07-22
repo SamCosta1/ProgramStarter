@@ -31,7 +31,7 @@ $(document).ready(() => {
 
 function searchVal() {       return elements.$search_box.val();                             }
 function autoCompleteVal() { return elements.$result_box.find(".selected").data("command"); }
-function onProgChosen() {    electron.ipcRenderer.send('on-command', autoCompleteVal());    }
+function onProgChosen() {  electron.ipcRenderer.send('on-command', autoCompleteVal());    }
 
 electron.ipcRenderer.on("reset", reset);
 
@@ -39,10 +39,15 @@ function reset() {
     elements.$search_box.val("");   
     updateSearchList();
     refresh();
+    elements.$search_box[0].focus();
+}
+
+function onFileSearchRecieved(results) {
+    console.log(results);
 }
 
 function updateSearchList(searchTerm) {
-    elements.$result_box.empty();
+    elements.$result_box.empty();  
 
     if (!searchTerm || searchTerm.trim().length == 0)
         return;

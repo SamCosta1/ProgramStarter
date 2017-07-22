@@ -146,6 +146,17 @@ var baseInfo  = {
         name: "Gimp",
         type: types.photo_editor,
         version_command: ' --version | cut -f6 -d " "'
+    },
+
+    "1screen": {
+        name: "Disable Multi-Monitor",
+        author: "Written by Me!",
+        type: types.other
+    },
+
+    "2screen": {
+        name: "Enable Dual Monitors",
+        extends: "1screen"
     }
 }
 
